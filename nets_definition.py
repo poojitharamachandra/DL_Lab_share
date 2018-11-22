@@ -154,8 +154,8 @@ def FCN_Seg(self, is_training=True):
         # TODO (3.1) - implement the refinement block which upsample the data 2x like in configuration 1 
         # but that also fuse the upsampled features with the corresponding skip connection (DB4_skip_connection)
         # through concatenation. After that use a convolution with kernel 3x3 to produce 256 output feature maps 
-		
-		upsample = TransitionUp_elu(x,120,2,'3')
+        
+        upsample = TransitionUp_elu(x,120,2,'3')
         print("upsample shape",upsample.shape)
         if(upsample.shape[1] > DB4_skip_connection.shape[1]):
             upsample= crop(upsample,DB4_skip_connection)
