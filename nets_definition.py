@@ -166,6 +166,15 @@ def FCN_Seg(self, is_training=True):
        
         # TODO (3.2) - Repeat TODO(3.1) now producing 160 output feature maps and fusing the upsampled features 
         # with the corresponding skip connection (DB3_skip_connection) through concatenation.
+        upsample2 = TransitionUp_elu(upsample,120,2,'3_2')
+        print("upsample2 shape",upsample2.shape)
+        if(upsample2.shape[1] > DB3_skip_connection.shape[1]):
+            upsample2= crop(upsample2,DB3_skip_connection)
+        print("after crop upsample shape", upsample2.shape)
+        fused2 = Concat_layers(upsample2,DB3_skip_connection)
+        convolute2 = Convolution(fused2,160,3,name="config3_2")
+        print("after convolution--", convolute2.shape)
+                
 
         # TODO (3.3) - incorporate a upsample function which takes the features from TODO (3.2)  
         # and produces 120 output feature maps which are 4x bigger in resolution than 
@@ -173,7 +182,13 @@ def FCN_Seg(self, is_training=True):
         # upsampled_features to the same resolution as imput image
         # output feature name should match the next convolution layer, for instance
         # current_up4  
-              
+        
+        current_up4    =     TransitionUp_elu(convolute2,120,4,'3_3')
+        print(self.tgt_image.shape)
+        if(current_up4.shape[1]>self.tgt_image.shape[1]):
+            print("cropping")
+            current_up4=crop(current_up4,self.tgt_image)
+        print(current_up4)
 
         End_maps_decoder1 = slim.conv2d(current_up4, self.N_classes, [1, 1], scope='Final_decoder') #(batchsize, width, height, N_classes)
         
