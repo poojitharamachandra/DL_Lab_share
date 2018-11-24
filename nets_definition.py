@@ -208,6 +208,7 @@ def FCN_Seg(self, is_training=True):
         # output feature name should match the next convolution layer, for instance
         # current_up4 
         
+        current_up5= TransitionUp_elu(x,120,18,'1')
         End_maps_decoder1 = slim.conv2d(current_up5, self.N_classes, [1, 1], scope='Final_decoder') #(batchsize, width, height, N_classes)
         
         Reshaped_map = tf.reshape(End_maps_decoder1, (-1, self.N_classes))
